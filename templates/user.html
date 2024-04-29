@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <title>ИС САМСА</title>
+    </head>
+    <body>
+        <h1>{{ user.email }}</h1>
+        <p><a href="/.sso/logout">Выйти</a></p>
+        <h2>Сессии</h2>
+        {% for session in user.sessions %}
+        <p>
+            {{ session.created }} - {{ session.last_ip }} - {{ session.last_ua }} - {{ (session.id|string)[-8:] }}
+            {% if session.id|string == request.cookies.get("ttssoid").split(":")[0] %}
+            <strong>(текущая)</strong>
+            {% endif %}
+        </p>
+        {% endfor %}
+
+        <h2>Токены</h2>
+        <p>Входите без письма. Это надёжнее и безопаснее.</p>
+
+        <div style="border: 1px solid red; padding: 0 1em; background-color: rgba(255, 0, 0, 0.3);">
+            <p>
+                Мы храним тип вашего токена и в будущем тут будут показываться типы токенов для удобства. Пока можно поискать идентификатор
+                <a href="https://passkeydeveloper.github.io/passkey-authenticator-aaguids/explorer/?combined">здесь</a>.
+                Некоторые браузеры позволяют отказаться от передачи информации о токене. Например, Firefox делает это флажком
+                “Anonymize anyway”. Воспользуйтесь ей при необходимости.
+            </p>
+        </div>
+
+        {% for passkey in user.passkeys %}
+        <p>
+            {{ passkey.created }} - {{ passkey.aaguid }} - {{ passkey.credential_id.hex()[-8:] }}
+        </p>
+        {% else %}
+        <p>Пока токенов нет.</p>
+        {% endfor %}
+
+        <button id="enroll">Добавить ещё токен</button>
+
+        <hr/>
+
+        <p>Такие дела</p>
+
+        <script src="https://cdn.jsdelivr.net/npm/@github/webauthn-json@2.1.1/dist/browser-global/webauthn-json.browser-global.min.js"></script>
+        <script src="/.sso/static/webauthn.js"></script>
+        <script>
+            window.addEventListener("load", function() {
+                document.querySelector("#enroll").addEventListener("click", register);
+            });
+        </script>
+    </body>
+</html>

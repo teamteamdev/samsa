@@ -1,0 +1,19 @@
+{% extends "base.html" %}
+{% block content %}
+<h1>Войдите с САМСА</h1>
+<p>Вам придёт ссылка для входа на сайт.</p>
+<form method="post">
+    <input autofocus id="email" name="email" placeholder="antonov@ugractf.ru" required type="email" value="">
+
+    <button>Получить ссылку</button>
+</form>
+<p>или</p>
+<button id="passkey">Использовать Passkey</button>
+<script src="https://cdn.jsdelivr.net/npm/@github/webauthn-json@2.1.1/dist/browser-global/webauthn-json.browser-global.min.js"></script>
+<script src="/.sso/static/webauthn.js"></script>
+<script>
+    window.addEventListener("load", function() {
+        document.querySelector("#passkey").addEventListener("click", login);
+    });
+</script>
+{% endblock %}

@@ -1,0 +1,15 @@
+services:
+  db:
+    image: postgres:16
+    environment:
+      POSTGRES_DB: nora
+      POSTGRES_USER: nora
+      POSTGRES_PASSWORD: nora
+    ports:
+      - "127.0.0.1:16432:5432"
+    restart: unless-stopped
+  nginx:
+    image: nginx
+    volumes:
+      - ./nginx/nginx.conf:/etc/nginx/nginx.conf
+    network_mode: host
